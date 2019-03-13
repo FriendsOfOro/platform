@@ -4,7 +4,7 @@ namespace Oro\Bundle\EmailBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\EmailBundle\Entity\EmailTemplate;
-use Oro\Bundle\EntityExtendBundle\Form\Type\EntityType;
+use Oro\Bundle\EmailBundle\Form\Type\EntityRecordSelectType;
 use Oro\Bundle\FormBundle\Form\Handler\RequestHandlerTrait;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -149,7 +149,11 @@ class EmailTemplateController extends Controller
         $builder = $this->createFormBuilder();
         $builder->add(
             'entity',
-            EntityType::class
+            EntityRecordSelectType::class,
+            [
+                'autocomplete_alias' => $this->get('oro_entity.entity_alias_resolver')
+                    ->getAlias($emailTemplate->getEntityName()),
+            ]
         );
 
         return [

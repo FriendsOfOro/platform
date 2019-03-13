@@ -29,13 +29,29 @@
         }) }}
     {% endif %}
     {% if is_granted('oro_email_emailtemplate_preview') %}
-        {{ UI.button({
-            'path' :  path('oro_email_emailtemplate_inplacepreviewselect', {'id': form.vars.value.id }),
-            'title' : 'oro.email.emailtemplate.action.in_place_preview'|trans,
-            'label' : 'oro.email.emailtemplate.action.in_place_preview'|trans,
-            'aCss': 'btn-success dialog-form-renderer no-hash',
-            'iCss': 'fa-cog'
-        }) }}
+        {{- UI.clientButton({
+            'dataUrl': path('oro_email_emailtemplate_inplacepreviewselect', {'id': form.vars.value.id }),
+            'aCss': 'btn-success no-hash',
+            'iCss': 'fa-cog',
+            'label': 'oro.email.emailtemplate.action.in_place_preview'|trans,
+            'widget': {
+                'type': 'dialog',
+                'multiple': false,
+                'refresh-widget-alias': 'activity-list-widget',
+                'reload-widget-alias': 'thread-view',
+                'options': {
+                    'alias': 'reply-all-dialog',
+                    'dialogOptions' : {
+                        'title' : 'oro.email.reply_all'|trans,
+                        'allowMaximize': true,
+                        'allowMinimize': true,
+                        'dblclick': 'maximize',
+                        'maximizedHeightDecreaseBy': 'minimize-bar',
+                        'width': 1000
+                    }
+                }
+            }
+        }) -}}
     {% endif %}
 
     {% if form.vars.value.id and is_granted('oro_email_emailtemplate_clone') %}

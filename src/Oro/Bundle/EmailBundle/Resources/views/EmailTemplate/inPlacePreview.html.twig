@@ -1,1 +1,17 @@
-{{ form(form) }}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% block page_container %}
+    <div class="widget-content">
+        <div class="form-container">
+            <form id="{{ form.vars.id}}" name="{{ form.vars.name }}"
+                  method="get" action="{{ form.vars.action }}" enctype="multipart/form-data">
+                <fieldset class="form-horizontal">
+                    {{ form_row(form) }}
+                    <div class="widget-actions form-actions" style="display: none;">
+                        <button class="btn" type="reset">{{ 'Cancel'|trans }}</button>
+                        <button class="btn btn-primary" type="submit">{{ 'oro.organizationpro.select_organization_action.continue_button.label'|trans }}</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}
