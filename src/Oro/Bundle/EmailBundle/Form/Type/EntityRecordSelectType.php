@@ -3,29 +3,18 @@
 namespace Oro\Bundle\EmailBundle\Form\Type;
 
 use Doctrine\ORM\EntityManager;
-use Oro\Bundle\EntityConfigBundle\Config\ConfigManager;
 use Oro\Bundle\FormBundle\Autocomplete\SearchRegistry;
-use Oro\Bundle\FormBundle\Form\DataTransformer\EntityCreationTransformer;
 use Oro\Bundle\FormBundle\Form\DataTransformer\EntityToIdTransformer;
 use Oro\Bundle\FormBundle\Form\Type\OroJquerySelect2HiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class EntityRecordSelectType extends AbstractType
 {
-    /** @var AuthorizationCheckerInterface */
-    protected $authorizationChecker;
-
-    /** @var ConfigManager */
-    protected $configManager;
-
     /** @var EntityManager */
     protected $entityManager;
 
@@ -33,19 +22,13 @@ class EntityRecordSelectType extends AbstractType
     protected $searchRegistry;
 
     /**
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param ConfigManager                 $configManager
-     * @param EntityManager                 $entityManager
-     * @param SearchRegistry                $searchRegistry
+     * @param EntityManager  $entityManager
+     * @param SearchRegistry $searchRegistry
      */
     public function __construct(
-        AuthorizationCheckerInterface $authorizationChecker,
-        ConfigManager $configManager,
         EntityManager $entityManager,
         SearchRegistry $searchRegistry
     ) {
-        $this->authorizationChecker = $authorizationChecker;
-        $this->configManager = $configManager;
         $this->entityManager = $entityManager;
         $this->searchRegistry = $searchRegistry;
     }
@@ -65,9 +48,6 @@ class EntityRecordSelectType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'new_item_property_name'        => null,
-                'new_item_allow_empty_property' => false,
-                'new_item_value_path'           => 'value',
                 'configs'            => [
                     'placeholder'             => 'oro.user.form.choose_user',
                     'result_template_twig'    => 'OroEmailBundle:EmailTemplate:Autocomplete/result.html.twig',

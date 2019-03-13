@@ -152,6 +152,7 @@ class EmailTemplateController extends Controller
             EntityRecordSelectType::class,
             [
                 'autocomplete_alias' => 'entity_select',
+                'data_class' => $emailTemplate->getEntityName(),
                 'entity_class' => $emailTemplate->getEntityName(),
             ]
         );
