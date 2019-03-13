@@ -26,6 +26,7 @@ oro:
             no_subject: "no subject"
         form:
             choose_template:                     Choose a Template
+            choose_enity:                        Choose your entity to preview
             add_signature:                       Add Signature
             attach_file:                         Attach File
             from_record:                         From Record
@@ -160,6 +161,7 @@ oro:
 
             action:
                 preview: Preview
+                in_place_preview: In place preview
                 clone: Clone
 
             # email template system variables

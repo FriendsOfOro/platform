@@ -4,6 +4,7 @@ namespace Oro\Bundle\EmailBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\EmailBundle\Entity\EmailTemplate;
+use Oro\Bundle\EntityExtendBundle\Form\Type\EntityType;
 use Oro\Bundle\FormBundle\Form\Handler\RequestHandlerTrait;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -95,6 +96,83 @@ class EmailTemplateController extends Controller
      * @return array
      */
     public function previewAction(Request $request, $id = false)
+    {
+        if (!$id) {
+            $emailTemplate = new EmailTemplate();
+        } else {
+            /** @var EntityManager $em */
+            $em = $this->get('doctrine.orm.entity_manager');
+            $emailTemplate = $em->getRepository('Oro\Bundle\EmailBundle\Entity\EmailTemplate')->find($id);
+        }
+
+        /** @var FormInterface $form */
+        $form = $this->get('oro_email.form.emailtemplate');
+        $form->setData($emailTemplate);
+
+        if (in_array($request->getMethod(), array('POST', 'PUT'))) {
+            $this->submitPostPutRequest($form, $request);
+        }
+
+        $templateRendered = $this->get('oro_email.email_renderer')
+            ->compilePreview($emailTemplate, $form->get('translation')->getData());
+
+        return array(
+            'content'     => $templateRendered,
+            'contentType' => $emailTemplate->getType()
+        );
+    }
+
+    /**
+     * @Route("/in-place-preview/{id}", requirements={"id"="\d+"}, defaults={"id"=0}))
+     * @Acl(
+     *      id="oro_email_emailtemplate_inplacepreviewselect",
+     *      type="entity",
+     *      class="OroEmailBundle:EmailTemplate",
+     *      permission="VIEW"
+     * )
+     * @Template("OroEmailBundle:EmailTemplate:inPlacePreview.html.twig")
+     * @param Request $request
+     * @param bool|int $id
+     * @return array
+     */
+    public function inPlacePreviewSelectAction(Request $request, $id = false)
+    {
+        if (!$id) {
+            $emailTemplate = new EmailTemplate();
+        } else {
+            /** @var EntityManager $em */
+            $em = $this->get('doctrine.orm.entity_manager');
+            /** @var EmailTemplate $emailTemplate */
+            $emailTemplate = $em->getRepository('Oro\Bundle\EmailBundle\Entity\EmailTemplate')->find($id);
+        }
+
+        $builder = $this->createFormBuilder();
+        $builder->add(
+            'entity',
+            EntityType::class
+        );
+
+        return [
+            'form' => $builder->getForm()->createView(),
+            'template' => $emailTemplate,
+            'entityName' => $emailTemplate->getEntityName(),
+        ];
+    }
+
+    /**
+     * @Route("/preview/{id}", requirements={"id"="\d+"}, defaults={"id"=0}))
+     * @Acl(
+     *      id="oro_email_emailtemplate_in_place_preview",
+     *      type="entity",
+     *      class="OroEmailBundle:EmailTemplate",
+     *      permission="VIEW"
+     * )
+     * @Template("OroEmailBundle:EmailTemplate:preview.html.twig")
+     * @param Request $request
+     * @param bool|int $id
+     * @return array
+     */
+    public function inPlacePreviewAction(Request $request, $id = false)
     {
         if (!$id) {
             $emailTemplate = new EmailTemplate();
