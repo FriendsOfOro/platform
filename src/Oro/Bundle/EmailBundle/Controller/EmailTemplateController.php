@@ -151,15 +151,13 @@ class EmailTemplateController extends Controller
             'entity',
             EntityRecordSelectType::class,
             [
-                'autocomplete_alias' => $this->get('oro_entity.entity_alias_resolver')
-                    ->getAlias($emailTemplate->getEntityName()),
+                'autocomplete_alias' => 'entity_select',
+                'entity_class' => $emailTemplate->getEntityName(),
             ]
         );
 
         return [
             'form' => $builder->getForm()->createView(),
-            'template' => $emailTemplate,
-            'entityName' => $emailTemplate->getEntityName(),
         ];
     }
 
